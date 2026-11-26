@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baysoz-contractlattice"
+version = "1.0.0"
+description = "Baysöz Labs offline OpenAPI semantic breaking-change and contract-drift gate with deterministic SARIF CI enforcement — Baysöz Labs <baysozlabs@proton.me>"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "MIT" }
+authors = [
+    { name = "Baysöz Labs", email = "baysozlabs@proton.me" },
+]
+maintainers = [
+    { name = "Baysöz Labs", email = "baysozlabs@proton.me" },
+]
+keywords = ["openapi", "contract-testing", "sarif", "devops", "supply-chain", "baysöz-labs"]
+dependencies = ["PyYAML>=6.0.2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "ruff>=0.7", "semgrep>=1.90"]
+
+[project.scripts]
+contractlattice = "baysoz_contractlattice.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/yazilimbaysoz-svg/baysoz-contractlattice"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

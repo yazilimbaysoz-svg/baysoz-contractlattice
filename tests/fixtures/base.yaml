@@ -1,0 +1,102 @@
+openapi: 3.1.0
+info:
+  title: Widget API baseline
+  version: 1.0.0
+  description: Baysöz Labs <baysozlabs@proton.me> contract fixture
+servers:
+  - url: https://api.example.test/v1
+security:
+  - bearerAuth: []
+paths:
+  /v1/widgets:
+    parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+    get:
+      operationId: listWidgets
+      security:
+        - oauth: [read:widgets]
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetList'
+        '404':
+          description: not found
+    post:
+      operationId: createWidget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetCreate'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+  /v1/widgets/{id}:
+    get:
+      operationId: getWidget
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+components:
+  schemas:
+    Widget:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          enum: [alpha, beta, gamma]
+        tags:
+          type: array
+          items:
+            type: string
+    WidgetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Widget'
+    WidgetCreate:
+      allOf:
+        - type: object
+          properties:
+            name:
+              type: string
+        - required: [name]
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    oauth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://id.example.test/token
+          scopes:
+            read:widgets: read widgets

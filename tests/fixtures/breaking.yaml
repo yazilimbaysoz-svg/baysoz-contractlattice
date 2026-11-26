@@ -1,0 +1,78 @@
+openapi: 3.1.0
+info:
+  title: Widget API breaking
+  version: 2.0.0
+  description: Baysöz Labs <baysozlabs@proton.me> adversarial breaking fixture
+servers:
+  - url: https://api.example.test/v2
+security:
+  - bearerAuth: []
+paths:
+  /v1/widgets:
+    parameters:
+      - name: limit
+        in: query
+        required: true
+        schema:
+          type: integer
+          minimum: 5
+      - name: tenant
+        in: query
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: listItems
+      security: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetList'
+    post:
+      operationId: createWidget
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/WidgetCreate'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+components:
+  schemas:
+    Widget:
+      type: object
+      required: [id, name, email]
+      properties:
+        id:
+          type: string
+          format: date-time
+        name:
+          type: string
+          minLength: 1
+          enum: [alpha]
+        email:
+          type: string
+    WidgetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Widget'
+    WidgetCreate:
+      allOf:
+        - type: object
+          properties:
+            name:
+              type: string
+        - required: [name]
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

@@ -1,0 +1,17 @@
+openapi: 3.1.0
+info:
+  title: External reference consumer
+  version: 1.0.0
+  description: Baysöz Labs <baysozlabs@proton.me> external-reference fixture
+paths:
+  /v1/shared:
+    get:
+      operationId: getShared
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: 'shared.yaml#/components/schemas/Shared'
+components: {}

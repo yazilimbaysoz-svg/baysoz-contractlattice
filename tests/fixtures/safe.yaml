@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  description: Baysöz Labs <baysozlabs@proton.me> semantically identical fixture
+  version: 1.0.0
+  title: Widget API reordered
+servers:
+  - url: https://api.example.test/v1
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    oauth:
+      flows:
+        clientCredentials:
+          scopes:
+            read:widgets: read widgets
+          tokenUrl: https://id.example.test/token
+      type: oauth2
+    bearerAuth:
+      scheme: bearer
+      type: http
+  schemas:
+    WidgetCreate:
+      allOf:
+        - required: [name]
+        - properties:
+            name:
+              type: string
+          type: object
+    WidgetList:
+      items:
+        $ref: '#/components/schemas/Widget'
+      type: array
+    Widget:
+      properties:
+        tags:
+          items:
+            type: string
+          type: array
+        name:
+          enum: [gamma, alpha, beta]
+          minLength: 1
+          type: string
+        id:
+          format: uuid
+          type: string
+      required: [name, id]
+      type: object
+paths:
+  /v1/widgets/{id}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+          description: ok
+      parameters:
+        - schema:
+            format: uuid
+            type: string
+          required: true
+          in: path
+          name: id
+      operationId: getWidget
+  /v1/widgets:
+    post:
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+          description: created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetCreate'
+        required: true
+      operationId: createWidget
+    get:
+      responses:
+        '404':
+          description: not found
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetList'
+          description: ok
+      security:
+        - oauth: [read:widgets]
+      operationId: listWidgets
+    parameters:
+      - schema:
+          minimum: 1
+          type: integer
+        required: false
+        in: query
+        name: limit

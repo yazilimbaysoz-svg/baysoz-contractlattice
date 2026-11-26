@@ -1,0 +1,14 @@
+openapi: 3.1.0
+info:
+  title: Shared component
+  version: 1.0.0
+  description: Baysöz Labs <baysozlabs@proton.me> external-reference fixture
+paths: {}
+components:
+  schemas:
+    Shared:
+      type: object
+      required: [value]
+      properties:
+        value:
+          type: string

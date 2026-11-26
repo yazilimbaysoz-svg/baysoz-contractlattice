@@ -1,0 +1,13 @@
+openapi: 3.1.0
+info:
+  title: Cyclic reference
+  version: 1.0.0
+  description: Baysöz Labs <baysozlabs@proton.me> hostile cyclic fixture
+paths: {}
+components:
+  schemas:
+    Loop:
+      type: object
+      properties:
+        child:
+          $ref: '#/components/schemas/Loop'
